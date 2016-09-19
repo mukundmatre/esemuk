@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+=======
+#Project1
+#Mukund Madhusudan Atre
+#Anirudh Tiwari
+>>>>>>> project-1-rel
 #Target file name
 TARGET= main hw1
 
@@ -35,7 +41,18 @@ ASM= ./*.S
 CFLAGS = -g -Wall -O0 -std=gnu99
 
 #Define programs and commands
+<<<<<<< HEAD
 CC = gcc
+=======
+ifeq ($(ARC),bbb)
+	CC=gcc-arm-linux-gnueabihf
+else ifeq ($(ARC),frdm)
+	CC=gcc-arm-none-eabi
+else
+	CC=gcc
+endif
+
+>>>>>>> project-1-rel
 OBJDUMP = objdump -d 
 REMOVE = rm -rf
 
