@@ -1,17 +1,10 @@
-<<<<<<< HEAD
-=======
+
 #Project1
 #Mukund Madhusudan Atre
 #Anirudh Tiwari
->>>>>>> project-1-rel
-#Target file name
-TARGET= main hw1
 
-vpath %.c ./src
-vpath %.i .
-vpath %.S .
-vpath %.o .
-vpath %.h ./hdr
+include sources.mk
+
 
 
 #Listing C source files
@@ -41,9 +34,8 @@ ASM= ./*.S
 CFLAGS = -g -Wall -O0 -std=gnu99
 
 #Define programs and commands
-<<<<<<< HEAD
-CC = gcc
-=======
+
+
 ifeq ($(ARC),bbb)
 	CC=gcc-arm-linux-gnueabihf
 else ifeq ($(ARC),frdm)
@@ -52,7 +44,7 @@ else
 	CC=gcc
 endif
 
->>>>>>> project-1-rel
+
 OBJDUMP = objdump -d 
 REMOVE = rm -rf
 

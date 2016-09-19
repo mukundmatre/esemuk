@@ -45,15 +45,15 @@ int8_t my_memzero (uint8_t *src,uint32_t length){
 
 int8_t my_reverse(uint8_t *src, int length)
 {
- uint16_t i;
+ uint16_t j;
 
  if(src != NULL){
    int8_t temp;
    
    for(j=0;j<(length/2);j++){
       temp=*(src+j);
-      *(src+i)=*(src+length-i-1);
-      *(src+length-i-1)=temp;
+      *(src+j)=*(src+length-j-1);
+      *(src+length-j-1)=temp;
     }
 	
     return 0;
