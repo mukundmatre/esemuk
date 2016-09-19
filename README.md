@@ -1,2 +1,2 @@
-# esemuk
-Repository for ESE course by Mukund Madhusudan Atre
+This project is aimed at creating a makefile to build system which would support compilation on three different platforms namely, Beaglebone Black, Freedom Freescale and host machine. The project aimed at creating a makefile that would be architecture independent i.e. the main aim was to generate a flow of commands that would generate files and commands depending on the platform selected.
+The make file plays an important role in automating the build process. The make file offers the facility of updating the outputs only if the source file is changed. With a set of directives in the makefile, we can control how a system is build. Makefile helps in improving the overall capability of a system. They breakdown system in different parts which need not be everytime used for compilation. So, this helps in reducing the overall efficiency.
