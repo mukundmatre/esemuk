@@ -99,59 +99,42 @@ void main()
 #endif
 
 #ifdef BUFFER
-    uint8_t i,data,full,empty,l;
-    int addrem;
-    l=5;
-    mem_allocate(l);
-    struc_ptr->length = l;
-    struc_ptr->buffer = buff_ptr;
-    struc_ptr->head = buff_ptr;
-    struc_ptr->tail = buff_ptr;
-    while(1)
-    {
-    printf("\nData in buffer: ");
-    for(i=0;i<struc_ptr->length;++i)
-    {
-      printf("\n%c\n",*(struc_ptr->buffer+i));
-    }
-    printf("\nEnter 0 to add and 1 to remove item :" );
-    scanf(" %d",&addrem);
-    full = buff_full();
-    empty = buff_empty();
-    if ((addrem == 0) && full!=1)
-    {
-    	printf("Enter data: ");
-      scanf(" %c",&data);
-      add_item(data);
-    }
-    else if((addrem == 0) && full==1)
-    {
-    	printf("Buffer is full ");
-    }
+      UART0_init();
+      uint8_t i,j,data,full,empty,l;
+      int addrem;
+      l=5;
+      mem_allocate(l);
+      struc_ptr->length = l;
+      struc_ptr->buffer = buff_ptr;
+      struc_ptr->head = buff_ptr;
+      struc_ptr->tail = buff_ptr;
 
-    else if((addrem == 1) && empty!=1 )
-    {
-    	remove_item();
-    }
-
-    else if((addrem == 1) && empty==1 )
-    {
-    	printf("Buffer is empty ");
-    }
+      uint8_t string1[] = "Hey UART! This is the Circular buffer talking! But one character at a time";
 
 
-    else
-    {
-    	printf("Invalid input");
-    }
-  }
-  void mem_free();
+      for(i=0;i<strlen(string1);++i)
+      {
+      	add_item(string1[i]);
+        if (buff_full()==1)
+        {
+        	continue;
+    	}
 
+      for(j=0;j<struc_ptr->length;++j)
+      {
+      	send_char(remove_item());
+        if (buff_empty()==1)
+        {
+        	break;
+    	}
+      }
+      }
+    void mem_free();
 #endif
 
 
 #ifdef PROFILER
-
+//initializing profiler
   void initialize_counter()
   {
 
@@ -183,7 +166,7 @@ void main()
   double time_elapsed6;
   double cpu_ticks;
 
-
+//profiling for my_memmove
   initialize_counter();
   counter_start();
   int8_t my_memmove(uint8_t *src, uint8_t *dst, uint32_t length){
@@ -210,7 +193,7 @@ void main()
   cpu_ticks = TPM0->CNT;
   time_elapsed1= cpu_ticks*system_clock;
 
-
+//profiling for library function memmove
   initialize_counter();
   counter_start();
   void *memmove(void *str1, const void *str2, size_t n);
@@ -219,7 +202,7 @@ void main()
   time_elapsed2= cpu_ticks*system_clock;
 
 
-
+//profiling for my_memzero
   initialize_counter();
   counter_start();
   int8_t my_memzero (uint8_t *src,uint32_t length){
@@ -240,6 +223,7 @@ void main()
   cpu_ticks = TPM0->CNT;
   time_elapsed3= cpu_ticks*system_clock;
 
+//profiling for library function memset
   initialize_counter();
   counter_start();
   void *memset(void *str,int c , size_t n);
@@ -247,6 +231,7 @@ void main()
   cpu_ticks = TPM0->CNT;
   time_elapsed4= cpu_ticks*system_clock;
 
+//profiling for library function strrev
   initialize_counter();
   counter_start();
   char strrev(char a[]);
@@ -254,7 +239,7 @@ void main()
   cpu_ticks = TPM0->CNT;
   time_elapsed5= cpu_ticks*system_clock;
 
-
+//profiling for my_reverse
   initialize_counter();
   counter_start();
   int8_t my_reverse(uint8_t *src, int length)
@@ -281,7 +266,7 @@ void main()
   cpu_ticks = TPM0->CNT;
   time_elapsed6= cpu_ticks*system_clock;
 
-
+//profiling for my_itoa
   initialize_counter();
   counter_start();
   int8_t* my_itoa(int32_t intnum, int8_t *string,  int32_t base)
@@ -323,7 +308,7 @@ void main()
   cpu_ticks = TPM0->CNT;
   time_elapsed7= cpu_ticks*system_clock;
 
-
+//profiling for my_atoi
   initialize_counter();
   counter_start();
   int32_t my_atoi(int8_t *str)
@@ -352,7 +337,7 @@ void main()
   cpu_ticks = TPM0->CNT;
   time_elapsed8= cpu_ticks*system_clock;
 
-
+//profiling for my ftoa
   initialize_counter();
   counter_start();
   void reverse(char *str, int len)
@@ -419,9 +404,80 @@ void main()
   cpu_ticks = TPM0->CNT;
   time_elapsed9= cpu_ticks*system_clock;
 
+//profiling for logger
+  initialize_counter();
+  counter_start();
+  char string1[] = "Testing123,Serial Print Test, no params";
+  char string2[] = "This is an integer number: ";
+  float number2 = 200;
+  char string3[] = "This is an integer number: ";
+  float number3 = 4096;
+  char string4[] = "This is an integer number: ";
+  float number4 = 123456;
+  char string5[] = "This is a floating point number: ";
+  float number5 = 1543.321;
+  UART0_init();
+  LOG_0(string1,strlen(string1));
+
+  send_string("\r\n");
+
+  LOG_1(string2,number2,0);
+
+  send_string("\r\n");
+
+  LOG_1(string3,number3,0);
+
+  send_string("\r\n");
+
+  LOG_1(string4,number4,0);
+
+  send_string("\r\n");
+
+  LOG_1(string5,number5,3);
+  delayMs(200);
+  counter_stop();
+  cpu_ticks = TPM0->CNT;
+  time_elapsed10= cpu_ticks*system_clock;
+
+//profiling for circular buffer
+  initialize_counter();
+  counter_start();
+  UART0_init();
+  uint8_t i,j,data,full,empty,l;
+  int addrem;
+  l=5;
+  mem_allocate(l);
+  struc_ptr->length = l;
+  struc_ptr->buffer = buff_ptr;
+  struc_ptr->head = buff_ptr;
+  struc_ptr->tail = buff_ptr;
+
+  uint8_t string1[] = "Hey UART! This is the Circular buffer talking! But one character at a time";
+
+
+  for(i=0;i<strlen(string1);++i)
+  {
+  	add_item(string1[i]);
+    if (buff_full()==1)
+    {
+    	continue;
+	}
+
+  for(j=0;j<struc_ptr->length;++j)
+  {
+  	send_char(remove_item());
+    if (buff_empty()==1)
+    {
+    	break;
+	}
+  }
+  }
+  void mem_free();
+  counter_stop();
+  cpu_ticks = TPM0->CNT;
+  time_elapsed11= cpu_ticks*system_clock;
 
 #endif
 
 
 }
-

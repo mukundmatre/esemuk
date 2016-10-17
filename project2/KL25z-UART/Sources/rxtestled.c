@@ -1,5 +1,5 @@
 //Program for testing receiver through RGB LED
-#include "MKL25Z4.h"
+/*#include "MKL25Z4.h"
 #include "rxtestled.h"
 
 void UART0_init(void);
@@ -76,4 +76,4 @@ void LED_set(char value)
 	PTD->PCOR = 0x02;
 	else
 	PTD->PSOR = 0x02;
-}
+}*/

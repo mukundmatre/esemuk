@@ -1,4 +1,3 @@
-//circular buffer optimized for use with UART
 #include<stdio.h>
 #include<stdint.h>
 #include<string.h>
@@ -6,7 +5,7 @@
 #include "cbuff.h"
 
 cb_t *struc_ptr;
-char *buff_ptr;
+uint8_t *buff_ptr;
 
 /*int main()
 {
@@ -95,7 +94,7 @@ int buff_empty()
 }
 
 
-void add_item(char item)
+void add_item(uint8_t item)
 {
 
   if (struc_ptr->head<((struc_ptr->buffer)+((struc_ptr->length)-1)))
@@ -114,9 +113,9 @@ void add_item(char item)
 }
 
 
-char remove_item()
+uint8_t remove_item()
 {
-  char dataout;
+  uint8_t dataout;
 
   if(struc_ptr->tail<((struc_ptr->buffer)+((struc_ptr->length)-1)))
   {
@@ -133,8 +132,8 @@ char remove_item()
   	//printf("Read Data: %c",dataout);
   }
   numitem_check();
-  return dataout;
   //printf("\nNumber of items in buffer %d", struc_ptr->num_items);
+  return dataout;
 }
 
 
@@ -151,10 +150,10 @@ void numitem_check()
   }
 }
 
-void mem_allocate(int len)
+void mem_allocate(uint8_t len)
 {
   struc_ptr = (cb_t *) malloc(sizeof(cb_t));
-  buff_ptr = (char*) calloc(len , sizeof(char));
+  buff_ptr = (uint8_t*) calloc(len , sizeof(uint8_t));
 
 }
 
