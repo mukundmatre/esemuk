@@ -99,29 +99,53 @@ void main()
 #endif
 
 #ifdef BUFFER
-    int i,full,empty;
-    cb_t struc_ptr;
-    char *buff_ptr, dout;
-    mem_allocate(100);
-    struc_ptr.length = 100;
-    struc_ptr.buffer = buff_ptr;
-    struc_ptr.head = buff_ptr;
-    struc_ptr.tail = buff_ptr;
-    //full = buff_full();
-    //empty = buff_empty();
-    char string1[] = "Testing123,Serial Print Test, no params";
+    uint8_t i,data,full,empty,l;
+    int addrem;
+    l=5;
+    mem_allocate(l);
+    struc_ptr->length = l;
+    struc_ptr->buffer = buff_ptr;
+    struc_ptr->head = buff_ptr;
+    struc_ptr->tail = buff_ptr;
+    while(1)
+    {
+    printf("\nData in buffer: ");
+    for(i=0;i<struc_ptr->length;++i)
+    {
+      printf("\n%c\n",*(struc_ptr->buffer+i));
+    }
+    printf("\nEnter 0 to add and 1 to remove item :" );
+    scanf(" %d",&addrem);
+    full = buff_full();
+    empty = buff_empty();
+    if ((addrem == 0) && full!=1)
+    {
+    	printf("Enter data: ");
+      scanf(" %c",&data);
+      add_item(data);
+    }
+    else if((addrem == 0) && full==1)
+    {
+    	printf("Buffer is full ");
+    }
 
-      for(i=0;i< strlen(string1);i++ )
-      {
-        add_item(string1[i]);
-      }
-    UART0_init();
-      for(i=0; i< strlen(string1); i++ )
-      {
-    	dout = remove_item();
-        send_char(dout);
-      }
+    else if((addrem == 1) && empty!=1 )
+    {
+    	remove_item();
+    }
 
+    else if((addrem == 1) && empty==1 )
+    {
+    	printf("Buffer is empty ");
+    }
+
+
+    else
+    {
+    	printf("Invalid input");
+    }
+  }
+  void mem_free();
 
 #endif
 
@@ -257,7 +281,147 @@ void main()
   cpu_ticks = TPM0->CNT;
   time_elapsed6= cpu_ticks*system_clock;
 
+
+  initialize_counter();
+  counter_start();
+  int8_t* my_itoa(int32_t intnum, int8_t *string,  int32_t base)
+  {
+    int8_t index[]="0123456789ABCDEF";
+    uint32_t numb;
+    int i=0,j,k;
+    char temp;
+    //transfer to unsinged
+    if(base==10&&intnum<0)//if it is a decimal negative number
+    {
+    numb=(uint32_t)-intnum;
+    *(string+(i++))='-';
+    }
+    else numb=(uint32_t)intnum;
+    //transfer
+    do{
+      *(string+(i++))=index[numb%(uint32_t)base];
+      numb/=base;
+    }while(numb);
+
+    *(string+i)='\0';
+
+    if(*string=='-')
+      k=1;
+    else
+      k=0;
+
+
+    for(j=k;j<=(i-1)/2;j++)
+    {
+      temp=*(string+j);
+      *(string+j)=*(string+i-1+k-j);
+      *(string+i-1+k-j)=temp;
+    }
+    return string;
+  }
+  counter_stop();
+  cpu_ticks = TPM0->CNT;
+  time_elapsed7= cpu_ticks*system_clock;
+
+
+  initialize_counter();
+  counter_start();
+  int32_t my_atoi(int8_t *str)
+  {
+    int32_t range;
+    int32_t sign;
+
+    range = 0;
+    sign = 1;
+    //handling space, tab, newline, form feed and carriage return
+    while (*str == ' ' || *str == '\t' || *str == '\n' || *str == '\f' || *str == '\r')
+    str++;
+    //handling negative numbers
+    if (*str == '-')
+      sign = -1;
+    if (*str == '-' || *str == '+')
+      str++;
+    while (*str >= '0' && *str <= '9')
+    {
+      range = range * 10 + *str - '0';
+      str++;
+    }
+    return (sign * range);
+  }
+  counter_stop();
+  cpu_ticks = TPM0->CNT;
+  time_elapsed8= cpu_ticks*system_clock;
+
+
+  initialize_counter();
+  counter_start();
+  void reverse(char *str, int len)
+  {
+  	int i=0, j=len-1, temp;
+  	while (i<j)
+  	{
+  		temp = str[i];
+  		str[i] = str[j];
+  		str[j] = temp;
+  		i++; j--;
+  	}
+  }
+
+  // Converts a given integer x to string str[]. d is the number
+  // of digits required in output. If d is more than the number
+  // of digits in x, then 0s are added at the beginning.
+  int intToStr(int x, char str[], int d)
+  {
+  	int i = 0;
+  	while (x)
+  	{
+  		str[i++] = (x%10) + '0';
+  		x = x/10;
+  	}
+
+  	// If number of digits required is more, then
+  	// add 0s at the beginning
+  	while (i < d)
+  		str[i++] = '0';
+
+  	reverse(str, i);
+  	str[i] = '\0';
+  	return i;
+  }
+
+  // Converts a floating point number to string.
+  void ftoa(float n, char *res, int afterpoint)
+  {
+  	// Extract integer part
+  	int ipart = (int)n;
+
+  	// Extract floating part
+  	float fpart = n - (float)ipart;
+
+  	// convert integer part to string
+  	int i = intToStr(ipart, res, 0);
+
+  	// check for display option after point
+  	if (afterpoint != 0)
+  	{
+  		res[i] = '.'; // add dot
+
+  		// Get the value of fraction part upto given no.
+  		// of points after dot. The third parameter is needed
+  		// to handle cases like 233.007
+  		fpart = fpart * pow(10, afterpoint);
+
+  		intToStr((int)fpart, res + i + 1, afterpoint);
+  	}
+  }
+
+  counter_stop();
+  cpu_ticks = TPM0->CNT;
+  time_elapsed9= cpu_ticks*system_clock;
+
+
 #endif
 
 
 }
+
